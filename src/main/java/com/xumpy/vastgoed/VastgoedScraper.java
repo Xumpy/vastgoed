@@ -3,13 +3,14 @@ package com.xumpy.vastgoed;
 import java.util.List;
 
 public abstract class VastgoedScraper {
-    public abstract void scrape();
+    protected String location;
+    protected String type;
 
-    public abstract String getLocation();
-    public abstract List<Vastgoed> getScrapedVastgoed();
-    public abstract String getWebUrl();
-
-    public String executeWebCall(){
-        return null;
+    public VastgoedScraper(String type, String location){
+        this.location = location;
+        this.type = type;
     }
+
+    public abstract List<Vastgoed> getScrapedVastgoed();
+    public abstract void scrape();
 }

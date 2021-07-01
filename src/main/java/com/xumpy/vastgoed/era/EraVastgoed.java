@@ -1,9 +1,12 @@
 package com.xumpy.vastgoed.era;
 
 import com.xumpy.vastgoed.Vastgoed;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
-import javax.lang.model.util.Elements;
+import java.io.IOException;
 
 public class EraVastgoed extends Vastgoed {
     private String uniqueName;
@@ -15,6 +18,11 @@ public class EraVastgoed extends Vastgoed {
     @Override
     public String getUniqueName() {
         return uniqueName;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 
     @Override
@@ -32,15 +40,28 @@ public class EraVastgoed extends Vastgoed {
         return size;
     }
 
+    private String getTextInFieldItem(Elements field){
+        if (field.select(".field-item").hasText()){
+            return field.select(".field-item").text();
+        } else {
+            return field.text();
+        }
+    }
+
     @Override
-    public Vastgoed build(Element webContent) {
-        Element titleField = webContent.select(".field-name-title-field").select(".field-item").first();
-        Element addressField = webContent.select(".field-name-era-adres--c").select(".field-item").first();
+    public Vastgoed build(String baseUrl, Element webContent) {
+        try {
+            this.description = getTextInFieldItem(webContent.select(".field-name-title-field"));
+            this.uniqueName = DescriptionToUrl.transform(baseUrl, this.description);
+            this.address = getTextInFieldItem(webContent.select(".field-name-era-adres--c"));
 
-        this.description = titleField.text();
-        this.address = addressField.text();
+            Document doc = Jsoup.connect(uniqueName).get();
 
-        System.out.println(DescriptionToUrl.transform("https://www.era.be/nl/te-koop/lommel/grond", this.description));
+            this.price = getTextInFieldItem(doc.select(".field-name-era-actuele-vraagprijs--c"));
+            this.size = getTextInFieldItem(doc.select(".field-name-era-oppervlakte-grond--c"));
+        } catch (Exception e) {
+
+        }
 
         return this;
     }

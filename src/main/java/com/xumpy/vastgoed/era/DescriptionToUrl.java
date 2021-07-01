@@ -8,11 +8,13 @@ public class DescriptionToUrl {
                 .replace(",", "")
                 .replace("(", "")
                 .replace(")", "")
+                .replace("!", "")
+                .replace(" in ", "-")
                 .replace(" ", "-")
                 .replace("²", "2")
                 .toLowerCase(Locale.ROOT);
     }
     public static String transform(String base, String description){
-        return transformDescription(description);
+        return base + "/" + transformDescription(description);
     }
 }
