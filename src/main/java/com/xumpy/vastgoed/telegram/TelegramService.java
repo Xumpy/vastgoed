@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Service
 public class TelegramService extends TelegramLongPollingBot {
     @Value("${telegram.bot.token}") private String telegramBotToken;
-    private String chat_id;
+    private long chat_id;
 
     @Override
     public String getBotUsername() {
@@ -25,19 +25,23 @@ public class TelegramService extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        System.out.println(update.getMessage().getChat().getUserName());
+        chat_id = update.getMessage().getChatId();
     }
 
-    public void sendNewVastgoed(Vastgoed vastgoed){
-        String message_text = "--------- nieuw vastgoed gevonden -------\n";
-        message_text  = message_text + vastgoed.toString();
-        SendMessage message = new SendMessage(chat_id, message_text);
+    private void sendMessage(String message_text){
+        SendMessage message = new SendMessage(String.valueOf(chat_id), message_text);
 
         try {
             execute(message);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendNewVastgoed(Vastgoed vastgoed){
+        String message_text = "--------- nieuw vastgoed gevonden -------\n";
+        message_text  = message_text + vastgoed.toString();
+        sendMessage(message_text);
     }
 
     public void sendUpdateVastgoed(Vastgoed vastgoedNew, Vastgoed vastgoedOld){
@@ -47,12 +51,6 @@ public class TelegramService extends TelegramLongPollingBot {
         message_text = message_text + "--------- nieuwe waarden -----------\n";
         message_text = message_text + vastgoedNew.toString();
 
-        SendMessage message = new SendMessage(chat_id, message_text);
-
-        try {
-            execute(message);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        sendMessage(message_text);
     }
 }
