@@ -1,6 +1,9 @@
 package com.xumpy.vastgoed.telegram;
 
+import com.xumpy.vastgoed.db.TelegramDBPojo;
+import com.xumpy.vastgoed.db.TelegramRepo;
 import com.xumpy.vastgoed.interfaces.Vastgoed;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -11,7 +14,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Service
 public class TelegramService extends TelegramLongPollingBot {
     @Value("${telegram.bot.token}") private String telegramBotToken;
-    private long chat_id;
+
+    @Autowired TelegramRepo telegramRepo;
 
     @Override
     public String getBotUsername() {
@@ -25,16 +29,22 @@ public class TelegramService extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        chat_id = update.getMessage().getChatId();
+        for (TelegramDBPojo telegramDBPojo: telegramRepo.findAll()){
+            if (telegramDBPojo.getChatId().equals(update.getMessage().getChatId())) return;
+        }
+        TelegramDBPojo telegramDBPojo = new TelegramDBPojo();
+        telegramDBPojo.setChatId(update.getMessage().getChatId());
+        telegramRepo.save(telegramDBPojo);
     }
 
     private void sendMessage(String message_text){
-        SendMessage message = new SendMessage(String.valueOf(chat_id), message_text);
-
-        try {
-            execute(message);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
+        for (TelegramDBPojo telegramDBPojo: telegramRepo.findAll()){
+            SendMessage message = new SendMessage(String.valueOf(telegramDBPojo.getChatId()), message_text);
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                telegramRepo.delete(telegramDBPojo);
+            }
         }
     }
 

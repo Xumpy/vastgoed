@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VastgoedRepo extends CrudRepository<VastgoedDBPojo, String> {
+public interface VastgoedRepo extends CrudRepository<VastgoedDBPojo, Integer> {
     @Query("from VastgoedDBPojo where uniquename = :uniquename order by scraped asc")
     public List<VastgoedDBPojo> selectVastgoedUniqueName(String uniquename);
 }
