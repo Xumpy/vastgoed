@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Service
 public class TelegramService extends TelegramLongPollingBot {
     @Value("${telegram.bot.token}") private String telegramBotToken;
-    @Value("${telegram.chat.id}") private String chat_id;
+    private String chat_id;
 
     @Override
     public String getBotUsername() {
@@ -25,6 +25,7 @@ public class TelegramService extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        System.out.println(update.getMessage().getChat().getUserName());
     }
 
     public void sendNewVastgoed(Vastgoed vastgoed){
