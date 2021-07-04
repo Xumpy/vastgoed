@@ -18,7 +18,7 @@ public class NotarisScraper extends VastgoedScraper {
 
     @Override
     public Boolean sentTelegram() {
-        return false;
+        return true;
     }
 
     @Override
@@ -67,13 +67,13 @@ public class NotarisScraper extends VastgoedScraper {
 
                 try{
                     Map<String, String> municipality = (Map)response.get("municipality");
-                    vastgoed.setLocation(municipality.get("municipality_Nl"));
+                    vastgoed.setLocation(municipality != null ? municipality.get("municipality_Nl") : null);
 
                     Map<String, String> description = (Map)response.get("desc");
-                    vastgoed.setDescription(description.get("freeText_Nl"));
+                    vastgoed.setDescription(description != null ? description.get("freeText_Nl") : null);
 
                     Map<String, String> street = (Map)response.get("street");
-                    vastgoed.setAddress(street.get("street_Nl"));
+                    vastgoed.setAddress(street != null ? street.get("street_Nl") : null);
                     vastgoed.setPrice(response.get("price") != null ? response.get("price").toString() : null);
                     vastgoed.setSize(response.get("searchSurface") != null ? response.get("searchSurface").toString() : null);
                 }
