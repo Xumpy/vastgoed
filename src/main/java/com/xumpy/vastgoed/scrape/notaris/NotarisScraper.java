@@ -65,17 +65,21 @@ public class NotarisScraper extends VastgoedScraper {
                 vastgoed.setUniqueName(response.get("id").toString());
                 vastgoed.setType(super.getType(type));
 
-                Map<String, String> municipality = (Map)response.get("municipality");
-                vastgoed.setLocation(municipality.get("municipality_Nl"));
+                try{
+                    Map<String, String> municipality = (Map)response.get("municipality");
+                    vastgoed.setLocation(municipality.get("municipality_Nl"));
 
-                Map<String, String> description = (Map)response.get("desc");
-                vastgoed.setDescription(description.get("freeText_Nl"));
+                    Map<String, String> description = (Map)response.get("desc");
+                    vastgoed.setDescription(description.get("freeText_Nl"));
 
-                Map<String, String> street = (Map)response.get("street");
-                vastgoed.setAddress(street.get("street_Nl"));
-                vastgoed.setPrice(response.get("price").toString());
-                vastgoed.setSize(response.get("searchSurface").toString());
-
+                    Map<String, String> street = (Map)response.get("street");
+                    vastgoed.setAddress(street.get("street_Nl"));
+                    vastgoed.setPrice(response.get("price") != null ? response.get("price").toString() : null);
+                    vastgoed.setSize(response.get("searchSurface") != null ? response.get("searchSurface").toString() : null);
+                }
+                catch (Exception ex){
+                    ex.printStackTrace();
+                }
                 vastgoeds.add(vastgoed);
             }
         } catch (IOException e) { }
