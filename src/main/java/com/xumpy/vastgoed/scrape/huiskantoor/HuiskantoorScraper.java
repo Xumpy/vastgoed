@@ -19,7 +19,7 @@ public class HuiskantoorScraper extends VastgoedScraper {
 
     @Override
     public Boolean sentTelegram() {
-        return false;
+        return true;
     }
 
     @Override
