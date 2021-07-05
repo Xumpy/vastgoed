@@ -5,7 +5,6 @@ import com.xumpy.vastgoed.db.VastgoedRepo;
 import com.xumpy.vastgoed.interfaces.Vastgoed;
 import com.xumpy.vastgoed.interfaces.VastgoedScraper;
 import com.xumpy.vastgoed.interfaces.VastgoedType;
-import com.xumpy.vastgoed.scrape.vastgoedc.VastgoedCScraper;
 import com.xumpy.vastgoed.telegram.TelegramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
