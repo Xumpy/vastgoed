@@ -54,22 +54,25 @@ public class HuiskantoorScraper extends VastgoedScraper {
     private Vastgoed buildVastgoed(VastgoedType type, Integer postcode, Element webContent){
         HuiskantoorVastgoed vastgoed  = new HuiskantoorVastgoed();
 
-        vastgoed.setUniqueName(webContent.select(".spotlight__image > a").first().attr("href"));
-        vastgoed.setProvider("HUISKANTOOR");
-        vastgoed.setType(super.getType(type));
-        vastgoed.setLocation(super.getCity(postcode));
-        vastgoed.setState(webContent.select(".spotlight__image__sticker").text());
-        try {
-            Document doc = Jsoup.connect(baseUrl + vastgoed.getUniqueName()).get();
+        try{
+            vastgoed.setUniqueName(webContent.select(".spotlight__image > a").first().attr("href"));
+            vastgoed.setProvider("HUISKANTOOR");
+            vastgoed.setType(super.getType(type));
+            vastgoed.setLocation(super.getCity(postcode));
+            vastgoed.setState(webContent.select(".spotlight__image__sticker").text());
+            try {
+                Document doc = Jsoup.connect(baseUrl + vastgoed.getUniqueName()).get();
 
-            vastgoed.setDescription(doc.select(".property__details__block__description").text());
-            vastgoed.setAddress(doc.select(".property__header-block__adress__street").text());
-            vastgoed.setPrice(doc.select(".financial").select(".even").select(".value").text());
-            vastgoed.setSize(doc.select(".construction").select(".odd").select(".value").text());
-        } catch (Exception e) {
+                vastgoed.setDescription(doc.select(".property__details__block__description").text());
+                vastgoed.setAddress(doc.select(".property__header-block__adress__street").text());
+                vastgoed.setPrice(doc.select(".financial").select(".even").select(".value").text());
+                vastgoed.setSize(doc.select(".construction").select(".odd").select(".value").text());
+            } catch (Exception e) {
 
+            }
+        } catch (Exception ex){
+            ex.printStackTrace();
         }
-
         return vastgoed;
     }
 }
