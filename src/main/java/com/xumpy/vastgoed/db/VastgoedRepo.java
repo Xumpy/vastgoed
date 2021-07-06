@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface VastgoedRepo extends CrudRepository<VastgoedDBPojo, Integer> {
-    @Query("from VastgoedDBPojo where uniquename = :uniquename order by scraped asc")
+    @Query("from VastgoedDBPojo where uniquename = :uniquename order by scraped desc")
     public List<VastgoedDBPojo> selectVastgoedUniqueName(String uniquename);
 }
